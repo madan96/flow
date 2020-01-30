@@ -2,11 +2,12 @@
 
 import logging
 import datetime
+import json
 import numpy as np
 import time
 import os
 
-from flow.core.util import emission_to_csv
+from flow.core.util import emission_to_csv, emission_to_csv_custom
 
 
 class Experiment:
@@ -55,9 +56,11 @@ class Experiment:
         the environment object the simulator will run
     """
 
-    def __init__(self, env):
+    def __init__(self, env, exp_no):
         """Instantiate Experiment."""
         self.env = env
+        self.exp_count = exp_no
+        self.crashes = []
 
         logging.info(" Starting experiment {} at {}".format(
             env.network.name, str(datetime.datetime.utcnow())))
@@ -116,15 +119,27 @@ class Experiment:
             ret = 0
             ret_list = []
             state = self.env.reset()
+            curr_run_crash = False
             for j in range(num_steps):
                 state, reward, done, _ = self.env.step(rl_actions(state))
+                if(self.env.k.simulation.check_collision()):
+                    curr_run_crash = True
                 vel[j] = np.mean(
                     self.env.k.vehicle.get_speed(self.env.k.vehicle.get_ids()))
+                # print ("Run: ", i, "Step: ", j, "Vel: ", self.env.k.vehicle.get_speed(self.env.k.vehicle.get_ids()))
                 ret += reward
+                
+                    # print ("Run: ", i, " Time: ", np.mean(
+                        # self.env.k.vehicle.get_timestep(self.env.k.vehicle.get_ids()[0])))
                 ret_list.append(reward)
+                # if (len(self.env.k.vehicle.get_ids()) > 0):
+                #     for id in self.env.k.vehicle.get_ids():
+                #         print ("ORIENT_" + str(id) +  ": ", self.env.k.vehicle.get_orientation(id))
 
                 if done:
                     break
+
+            self.crashes.append(curr_run_crash)
             rets.append(ret)
             vels.append(vel)
             mean_rets.append(np.mean(ret_list))
@@ -157,7 +172,8 @@ class Experiment:
             emission_path = os.path.join(dir_path, emission_filename)
 
             # convert the emission file into a csv
-            emission_to_csv(emission_path)
+            # emission_to_csv(emission_path)
+            emission_to_csv_custom(emission_path, self.exp_count)
 
             # Delete the .xml version of the emission file.
             os.remove(emission_path)

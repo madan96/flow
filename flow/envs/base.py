@@ -368,11 +368,11 @@ class Env(gym.Env):
                 self.k.vehicle.update_vehicle_colors()
 
             # crash encodes whether the simulator experienced a collision
-            crash = self.k.simulation.check_collision()
+            # crash = self.k.simulation.check_collision()
 
             # stop collecting new simulation steps if there is a collision
-            if crash:
-                break
+            # if crash:
+            #     break
 
             # render a frame
             self.render()
@@ -397,9 +397,9 @@ class Env(gym.Env):
         # compute the reward
         if self.env_params.clip_actions:
             rl_clipped = self.clip_actions(rl_actions)
-            reward = self.compute_reward(rl_clipped, fail=crash)
+            reward = self.compute_reward(rl_clipped, fail=False)
         else:
-            reward = self.compute_reward(rl_actions, fail=crash)
+            reward = self.compute_reward(rl_actions, fail=False)
 
         return next_observation, reward, done, infos
 

@@ -7,6 +7,8 @@ import numpy as np
 import networkx as nx
 from itertools import islice
 
+from collections import OrderedDict
+
 ADDITIONAL_NET_PARAMS = {
     # dictionary of traffic light grid array data
     "grid_array": {
@@ -142,8 +144,9 @@ class TrafficLightGridNetwork(Network):
 
         # specifies whether or not there will be traffic lights at the
         # intersections (True by default)
-        self.use_traffic_lights = net_params.additional_params.get(
-            "traffic_lights", True)
+        self.use_traffic_lights = False
+        # net_params.additional_params.get(
+        #     "traffic_lights", False)
 
         # radius of the inner nodes (ie of the intersections)
         self.nodes_radius = 2.9 + 3.3 * max(self.vertical_lanes,
@@ -657,7 +660,7 @@ class TrafficLightGridNetwork(Network):
                 node_id = "({}.{})".format(x, y)
                 con_dict[node_id] = node_cons(x, y, 1)  # Still confused about what a signal_group does...,
                 # but made all connections with all lanes!
-
+        
         return con_dict
 
     # TODO necessary?
@@ -710,7 +713,7 @@ class TrafficLightGridNetwork(Network):
                                            size=cars_heading_left + cars_heading_right).tolist()
             start_lanes += horz_lanes
 
-        return start_pos, start_lanes
+        return sorted(start_pos), sorted(start_lanes)
 
     @property
     def node_mapping(self):

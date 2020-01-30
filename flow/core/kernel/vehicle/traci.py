@@ -1013,9 +1013,15 @@ class TraCIVehicle(KernelVehicle):
             route_id = 'route{}_0'.format(veh_id)
         else:
             num_routes = len(self.master_kernel.network.rts[edge])
+            # print ("EDGE: ", edge)
+            # edge = sorted(edge)
             frac = [val[1] for val in self.master_kernel.network.rts[edge]]
+            # print ("FRACTION: ", frac)
+            # frac = [1.0, 0, 0]
+            # print ("EDGE: ", edge)
             route_id = 'route{}_{}'.format(edge, np.random.choice(
                 [i for i in range(num_routes)], size=1, p=frac)[0])
+            # print ("ROUTE ID: ", route_id)
         # print("before adding vehicles, we have these this number of vehicles: ")
         # print(tc.LAST_STEP_VEHICLE_ID_LIST)
 
