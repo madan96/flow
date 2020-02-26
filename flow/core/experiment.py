@@ -173,7 +173,7 @@ class Experiment:
 
             # convert the emission file into a csv
             # emission_to_csv(emission_path)
-            emission_to_csv_custom(emission_path, self.exp_count)
+            emission_to_csv_custom(emission_path, self.exp_count, os.path.join(self.env.sim_params.emission_path, "traffic_data_" + str(self.exp_count) + ".csv"))
 
             # Delete the .xml version of the emission file.
             os.remove(emission_path)
