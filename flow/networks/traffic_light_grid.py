@@ -706,9 +706,9 @@ class TrafficLightGridNetwork(Network):
             right_edge = "({}.{})--({}.{})".format(x_max, y, x_max - 1, y)
 
             start_pos += [(left_edge, x0 + k * dx)
-                          for k in range(cars_heading_top)]
+                          for k in range(cars_heading_left)]
             start_pos += [(right_edge, x0 + k * dx)
-                          for k in range(cars_heading_bot)]
+                          for k in range(cars_heading_right)]
             horz_lanes = np.random.randint(low=0, high=net_params.additional_params["horizontal_lanes"],
                                            size=cars_heading_left + cars_heading_right).tolist()
             start_lanes += horz_lanes
