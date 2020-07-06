@@ -320,7 +320,7 @@ class TrafficLightGridEnv(Env):
                        grid_array["long_length"],
                        grid_array["inner_length"])
 
-        max_phase_duration = 90
+        max_phase_duration = 200
 
         # get the state arrays
         speeds = [
